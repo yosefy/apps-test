@@ -1,5 +1,5 @@
 import express from "express";
-// import { MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 import fs from "fs";
 
 const url = "mongodb://root:example@localhost:27017/";
@@ -40,19 +40,20 @@ app.post("/hi", (req, res) => {
       return e;
     }
 
-    // MongoClient.connect(url, function (err, db) {
-    //   if (err) throw err;
-    //   var dbo = db.db("test");
-    //   dbo.collection("queries").insertMany({ data: req.body }, function (err) {
-    //     if (err) throw err;
-    //     console.log("1 document inserted");
-    //     db.close();
-    //   });
-    // });
+
 
     // return req.body;
   });
 
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("test");
+    dbo.collection("queries").insertOne({ data: req.body }, function (err) {
+      if (err) throw err;
+      console.log("1 document inserted");
+      db.close();
+    });
+  });
   console.log(req.body);
   res.send(req.body);
 
